@@ -1,0 +1,361 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI HealthCare System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>🏥 AI HealthCare System</h1>
+        <p>Advanced Disease Prediction & Telemedicine Platform</p>
+    </header>
+
+    <section id="auth-section">
+        <div class="auth-container">
+            <div class="login-form">
+                <h2>Login</h2>
+                <form>
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" required>
+
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" required>
+
+                    <label for="login-role">Role:</label>
+                    <select id="login-role">
+                        <option value="patient">Patient</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+
+            <div class="register-form">
+                <h2>Register</h2>
+                <form>
+                    <label for="register-name">Full Name:</label>
+                    <input type="text" id="register-name" required>
+
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" required>
+
+                    <label for="register-password">Password:</label>
+                    <input type="password" id="register-password" required>
+
+                    <label for="register-role">Role:</label>
+                    <select id="register-role">
+                        <option value="patient">Patient</option>
+                        <option value="doctor">Doctor</option>
+                    </select>
+
+                    <label for="register-phone">Phone:</label>
+                    <input type="tel" id="register-phone" required>
+
+                    <label for="register-location">Location:</label>
+                    <input type="text" id="register-location" required>
+
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard-section">
+        <nav>
+            <ul>
+                <li><a href="#overview">Welcome!</a></li>
+                <li><a href="#overview">📊 Overview</a></li>
+                <li><a href="#ai-prediction">🔬 AI Prediction</a></li>
+                <li><a href="#appointments">📅 Appointments</a></li>
+                <li><a href="#telemedicine">📞 Telemedicine</a></li>
+                <li><a href="#mental-health">🤖 Mental Health Bot</a></li>
+                <li><a href="#find-doctors">👨‍⚕️ Find Doctors</a></li>
+                <li><a href="#reports">📋 Reports</a></li>
+                <li><a href="#genetic-analysis">🧬 Genetic Analysis</a></li>
+                <li><a href="#logout">🚪 Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="dashboard-content">
+            <div id="overview">
+                <h2>Health Overview Dashboard</h2>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Health Score</h3>
+                        <div class="progress-bar" data-progress="85"></div>
+                        <p>85% - Good Health</p>
+                    </div>
+                    <div class="card">
+                        <h3>Upcoming Appointments</h3>
+                        <p>3</p>
+                        <p>Next: Tomorrow 10:00 AM</p>
+                    </div>
+                    <div class="card">
+                        <h3>Last Prediction</h3>
+                        <p>Diabetes Risk: Low</p>
+                        <p>2 hours ago</p>
+                    </div>
+                    <div class="card">
+                        <h3>Mental Health Status</h3>
+                        <p>Stress Level: Medium</p>
+                        <p>Recommended: Relaxation</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ai-prediction">
+                <h2>AI Disease Prediction</h2>
+                <p>Enter your health parameters for AI-powered disease risk assessment</p>
+                <form>
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" required>
+
+                    <label for="gender">Gender:</label>
+                    <select id="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+
+                    <label for="bmi">BMI:</label>
+                    <input type="number" id="bmi" step="0.1" required>
+
+                    <label for="blood-pressure">Blood Pressure (Systolic):</label>
+                    <input type="number" id="blood-pressure" required>
+
+                    <label for="cholesterol">Cholesterol:</label>
+                    <input type="number" id="cholesterol" required>
+
+                    <label for="blood-sugar">Blood Sugar:</label>
+                    <input type="number" id="blood-sugar" required>
+
+                    <label for="exercise">Exercise (hours/week):</label>
+                    <input type="number" id="exercise" required>
+
+                    <label for="smoking">Smoking:</label>
+                    <select id="smoking">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+
+                    <button type="submit">🔬 Run AI Prediction</button>
+                </form>
+            </div>
+
+            <div id="appointments">
+                <h2>Appointment Management</h2>
+                <button>📅 Book New Appointment</button>
+                <form>
+                    <h3>Book Appointment</h3>
+                    <label for="doctor">Doctor:</label>
+                    <select id="doctor">
+                        <option value="sarah-johnson">Dr. Sarah Johnson - Cardiology</option>
+                        <option value="mike-chen">Dr. Mike Chen - General Medicine</option>
+                        <option value="emily-davis">Dr. Emily Davis - Psychiatry</option>
+                    </select>
+
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" required>
+
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" required>
+
+                    <label for="type">Type:</label>
+                    <select id="type">
+                        <option value="online">Online (Video Call)</option>
+                        <option value="clinic">Clinic Visit</option>
+                    </select>
+
+                    <button type="submit">Book Appointment</button>
+                </form>
+
+                <div class="appointment-list">
+                    <div class="appointment-card">
+                        <h3>Dr. Sarah Johnson</h3>
+                        <p>Date: Tomorrow, 10:00 AM</p>
+                        <p>Type: Video Consultation</p>
+                        <p>Status: Confirmed</p>
+                        <button>Join Call</button>
+                        <button>Cancel</button>
+                    </div>
+                    <div class="appointment-card">
+                        <h3>Dr. Emily Davis</h3>
+                        <p>Date: Friday, 2:30 PM</p>
+                        <p>Type: Clinic Visit</p>
+                        <p>Status: Pending</p>
+                        <button>Reschedule</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="telemedicine">
+                <h2>Telemedicine Platform</h2>
+                <div class="video-call">
+                    <h3>📹 Video Call Interface</h3>
+                    <p>WebRTC Integration Ready</p>
+                    <div class="call-controls">
+                        <button>📞 Start Call</button>
+                        <button>⏹️ End Call</button>
+                        <button>🎤 Mute</button>
+                        <button>📹 Video Off</button>
+                        <button>💬 Chat</button>
+                        <button>📁 Share Files</button>
+                    </div>
+                </div>
+                <div class="waiting-room">
+                    <h3>Waiting Room</h3>
+                    <p>You are in the waiting room. Dr. Sarah Johnson will join shortly.</p>
+                    <div class="progress-bar" data-progress="65"></div>
+                    <p>Estimated wait time: 5 minutes</p>
+                </div>
+            </div>
+
+            <div id="mental-health">
+                <h2>Mental Health Support Bot</h2>
+                <p>Talk to our AI-powered mental health assistant</p>
+                <div class="chat-container">
+                    <div class="chat-message">
+                        <p>Health Assistant: Hello! I'm here to help with your mental health. How are you feeling today? You can tell me about stress, anxiety, mood, or any concerns you have.</p>
+                    </div>
+                    <form>
+                        <textarea placeholder="Type your message..."></textarea>
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="find-doctors">
+                <h2>Find Doctors Near You</h2>
+                <input type="text" placeholder="🔍 Search">
+                <div class="doctor-list">
+                    <div class="doctor-card">
+                        <h3>Dr. Sarah Johnson</h3>
+                        <p>Specialization: Cardiology</p>
+                        <p>Experience: 15 years</p>
+                        <p>Location: City General Hospital, 2.1 km away</p>
+                        <p>Rating: ⭐⭐⭐⭐⭐ (4.9/5)</p>
+                        <p>Available Online</p>
+                        <button>Book Appointment</button>
+                        <button>Start Video Call</button>
+                    </div>
+                    <div class="doctor-card">
+                        <h3>Dr. Mike Chen</h3>
+                        <p>Specialization: General Medicine</p>
+                        <p>Experience: 12 years</p>
+                        <p>Location: Wellness Clinic, 1.5 km away</p>
+                        <p>Rating: ⭐⭐⭐⭐⭐ (4.7/5)</p>
+                        <p>Busy (Available in 30 min)</p>
+                        <button>Book Appointment</button>
+                        <button>Join Queue</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reports">
+                <h2>Health Reports & Analytics</h2>
+                <button>📊 Generate New Report</button>
+                <button>📄 Export PDF</button>
+                <div class="report-card">
+                    <h3>Latest Health Report - August 15, 2025</h3>
+                    <div class="report-metrics">
+                        <p>Diabetes Risk: <span class="progress-bar" data-progress="25"></span> Low (25%)</p>
+                        <p>Heart Disease Risk: <span class="progress-bar" data-progress="45"></span> Medium (45%)</p>
+                        <p>Hypertension Risk: <span class="progress-bar" data-progress="15"></span> Low (15%)</p>
+                    </div>
+                    <p>AI Explanation: Based on your current health parameters, your overall health status is good. The medium heart disease risk is primarily due to family history. Regular exercise and maintaining current diet recommended.</p>
+                    <p>Doctor's Notes: Continue current medication. Schedule follow-up in 3 months.</p>
+                </div>
+            </div>
+
+            <div id="genetic-analysis">
+                <h2>Genetic Risk Analysis</h2>
+                <p>Analyze hereditary health risks based on family history</p>
+                <form>
+                    <h3>Family Health History</h3>
+                    <label for="mother-health">Mother's Health Issues:</label>
+                    <input type="text" id="mother-health">
+
+                    <label for="father-health">Father's Health Issues:</label>
+                    <input type="text" id="father-health">
+
+                    <label for="grandparents-health">Grandparents' Health Issues:</label>
+                    <input type="text" id="grandparents-health">
+
+                    <label for="siblings-health">Siblings' Health Issues:</label>
+                    <input type="text" id="siblings-health">
+
+                    <button type="submit">🧬 Analyze Genetic Risk</button>
+                </form>
+                <div class="genetic-results">
+                    <h3>Genetic Risk Assessment Results</h3>
+                    <div class="result-card">
+                        <p>Diabetes Risk: <span class="progress-bar" data-progress="30"></span> Low-Medium Risk (30%)</p>
+                        <p>Based on family history</p>
+                    </div>
+                    <div class="result-card">
+                        <p>Cardiovascular Risk: <span class="progress-bar" data-progress="40"></span> Medium Risk (40%)</p>
+                        <p>Based on paternal history</p>
+                    </div>
+                    <div class="result-card">
+                        <p>Cancer Risk: <span class="progress-bar" data-progress="65"></span> Medium-High Risk (65%)</p>
+                        <p>Based on maternal history</p>
+                    </div>
+                    <div class="recommendations">
+                        <h4>🔬 AI Recommendations:</h4>
+                        <ul>
+                            <li>Regular diabetes screening every 6 months</li>
+                            <li>Maintain healthy diet with low sugar intake</li>
+                            <li>Cardiovascular exercises 4-5 times per week</li>
+                            <li>Annual comprehensive health checkup</li>
+                            <li>Consider genetic counseling consultation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,150 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+}
+
+.auth-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.login-form, .register-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 40%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input, select, textarea, button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    background: #343a40;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+.dashboard-content {
+    margin-top: 20px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.card, .appointment-card, .doctor-card, .report-card, .result-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    height: 20px;
+    background: #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar[data-progress="85"] {
+    background: linear-gradient(to right, #28a745 85%, #ccc 85%);
+}
+
+.progress-bar[data-progress="65"] {
+    background: linear-gradient(to right, #ffc107 65%, #ccc 65%);
+}
+
+.progress-bar[data-progress="25"] {
+    background: linear-gradient(to right, #28a745 25%, #ccc 25%);
+}
+
+.progress-bar[data-progress="45"] {
+    background: linear-gradient(to right, #ffc107 45%, #ccc 45%);
+}
+
+.progress-bar[data-progress="15"] {
+    background: linear-gradient(to right, #28a745 15%, #ccc 15%);
+}
+
+.progress-bar[data-progress="30"] {
+    background: linear-gradient(to right, #28a745 30%, #ccc 30%);
+}
+
+.progress-bar[data-progress="40"] {
+    background: linear-gradient(to right, #ffc107 40%, #ccc 40%);
+}
+
+.video-call, .waiting-room, .chat-container {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.call-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.appointment-list, .doctor-list, .genetic-results {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
